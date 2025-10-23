@@ -1,0 +1,47 @@
+{
+  "pokemon":
+  {
+    "tag": "Pokemon",
+    "amount": 250
+  },
+  "mythical":
+  {
+    "tag": "Mythical",
+    "amount": 20
+  },
+  "legendary":
+  {
+    "tag": "Legendary",
+    "amount": 30
+  },
+  "ultra_beast":
+  {
+    "tag": "Ultra Beast",
+    "amount": 40
+  },
+  "paradox":
+  {
+    "tag": "Paradox",
+    "amount": 40
+  },
+  "hellasian":
+  {
+    "tag": "Hellasian",
+    "amount": 30
+  },
+  "protect":
+  {
+    "tag": "Protect",
+    "amount": 50
+  },
+  "death":
+  {
+    "tag": "Death",
+    "amount": 30
+  },
+  "retry":
+  {
+    "tag": "Retry",
+    "amount": 10
+  }
+}
