@@ -5,7 +5,7 @@ license="Restricted"
 
 [[mods]]
 modId="hellasdeck"
-version="3.0.1"
+version="3.0.2"
 displayName="HellasDeck"
 displayURL="https://discord.pixelmon-server.com"
 credits="xSasaki_Haise"
@@ -38,6 +38,6 @@ side="BOTH"
 [[dependencies.hellasdeck]]
 modId="hellascontrol"
 mandatory=true
-versionRange="[1.0.0,)"
+versionRange="[2.0.0,)"
 ordering="NONE"
 side="BOTH"
