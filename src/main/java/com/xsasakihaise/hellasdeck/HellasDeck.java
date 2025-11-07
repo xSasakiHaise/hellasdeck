@@ -3,10 +3,8 @@ package com.xsasakihaise.hellasdeck;
 import com.mojang.brigadier.CommandDispatcher;
 import com.xsasakihaise.hellascontrol.api.CoreCheck;
 import com.xsasakihaise.hellasdeck.commands.DeckBroadcastCommand;
-import com.xsasakihaise.hellasdeck.commands.DeckDependenciesCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckDrawCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckEndCommand;
-import com.xsasakihaise.hellasdeck.commands.DeckFeaturesCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckHelpCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckInputCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckListCommand;
@@ -16,7 +14,6 @@ import com.xsasakihaise.hellasdeck.commands.DeckStartCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckTokensCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckTokensGiveCommand;
 import com.xsasakihaise.hellasdeck.commands.DeckTokensTakeCommand;
-import com.xsasakihaise.hellasdeck.commands.DeckVersionCommand;
 import net.minecraft.command.CommandSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,9 +43,6 @@ public class HellasDeck {
             return;
         }
         CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
-        DeckVersionCommand.register(dispatcher, infoConfig);
-        DeckDependenciesCommand.register(dispatcher, infoConfig);
-        DeckFeaturesCommand.register(dispatcher, infoConfig);
         DeckStartCommand.register(dispatcher);
         DeckEndCommand.register(dispatcher);
         DeckDrawCommand.register(dispatcher);
