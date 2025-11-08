@@ -50,7 +50,7 @@ public class DeckOfManyMons {
                 this.cardTypeTags.put(entry.getKey(), tag);
             }
 
-            this.runLog.add("Run started for " + player.func_200200_C_().getString());
+            this.runLog.add("Run started for " + player.getDisplayName().getString());
         }
     }
 
@@ -171,7 +171,7 @@ public class DeckOfManyMons {
 
     public void endGame() {
         this.ended = true;
-        this.endLog.add("Game ended. Player: " + this.player.func_200200_C_().getString());
+        this.endLog.add("Game ended. Player: " + this.player.getDisplayName().getString());
 
         for(int i = 0; i < this.drawnCards.size(); ++i) {
             String card = (String)this.drawnCards.get(i);
