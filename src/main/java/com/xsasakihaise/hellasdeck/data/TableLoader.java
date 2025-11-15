@@ -8,10 +8,21 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Provides cached access to the numerous reward tables located under
+ * {@code data/tables/}. Each table defines friendly display names mapped to
+ * command payloads, keeping IO off the main thread once cached.
+ */
 public class TableLoader {
     private static final Map<String, Map<String, String>> tableCache = new ConcurrentHashMap();
     private static final String TABLE_PATH = "data/tables/";
 
+    /**
+     * Loads a table by name, caching it for future lookups.
+     *
+     * @param type table identifier such as {@code normal} or {@code shiny}
+     * @return mapping of display text to command data
+     */
     public static Map<String, String> getTable(String type) {
         if (tableCache.containsKey(type)) {
             return (Map)tableCache.get(type);

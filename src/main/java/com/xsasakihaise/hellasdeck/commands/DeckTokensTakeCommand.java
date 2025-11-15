@@ -11,7 +11,14 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Administrative counterpart to {@link DeckTokensGiveCommand} that removes
+ * tokens.
+ */
 public class DeckTokensTakeCommand {
+    /**
+     * Wires the {@code take} literal and permissions into Brigadier.
+     */
  public static void register(CommandDispatcher<CommandSource> dispatcher) {
   dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(Commands.func_197057_a("tokens").then(Commands.func_197057_a("take").then(Commands.func_197056_a("player", StringArgumentType.string()).then(((RequiredArgumentBuilder)Commands.func_197056_a("amount", IntegerArgumentType.integer(1)).requires((src) -> src.func_197034_c(2))).executes((ctx) -> {
    String name = StringArgumentType.getString(ctx, "player");

@@ -23,10 +23,27 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+/**
+ * Main entry point for the Hellas Deck sidemod.
+ *
+ * <p>The mod exposes the Deck of Many Mons feature set to the Hellas Pixelmon
+ * environment. At load it validates that the shared HellasCore is present and
+ * registers the Brigadier command tree that drives the entire experience.</p>
+ */
 @Mod("hellasdeck")
 public class HellasDeck {
+    /**
+     * Lazily populated metadata sourced from {@code config/hellasdeck.json}.
+     * The data is currently informational only but helps staff confirm the
+     * installed feature set.
+     */
     public static HellasDeckInfoConfig infoConfig;
 
+    /**
+     * Creates the mod instance, ensuring the Hellas core entitlement is valid
+     * and wiring the mod into the global Forge event bus so the command tree is
+     * registered during server startup.
+     */
     public HellasDeck() {
         CoreCheck.verifyCoreLoaded();
         if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
@@ -38,6 +55,11 @@ public class HellasDeck {
         bus.addListener(this::onRegisterCommands);
     }
 
+    /**
+     * Registers all Deck of Many Mons commands when Brigadier is initialised.
+     *
+     * @param event Forge registration hook supplying the dispatcher
+     */
     private void onRegisterCommands(RegisterCommandsEvent event) {
         if (!ModList.get().isLoaded("hellascontrol")) {
             return;

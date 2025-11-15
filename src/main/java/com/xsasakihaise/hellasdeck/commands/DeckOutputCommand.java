@@ -14,7 +14,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 
+/**
+ * Converts tokens back into Deck items via {@code /hellas deck output <amount>}.
+ */
 public class DeckOutputCommand {
+    /**
+     * Installs the output literal within the command tree.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(Commands.func_197057_a("output").then(((RequiredArgumentBuilder)Commands.func_197056_a("amount", IntegerArgumentType.integer(1)).requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();

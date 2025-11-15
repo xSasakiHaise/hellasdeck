@@ -10,7 +10,14 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Implements {@code /hellas deck list} to show the current draw order and
+ * protection status.
+ */
 public class DeckListCommand {
+    /**
+     * Installs the list literal.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(((LiteralArgumentBuilder)Commands.func_197057_a("list").requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();
