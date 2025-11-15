@@ -11,7 +11,14 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Implements {@code /hellas deck protect <index>} which shields a card from the
+ * death effect.
+ */
 public class DeckProtectCommand {
+    /**
+     * Registers the literal and integer argument with Brigadier.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(Commands.func_197057_a("protect").then(((RequiredArgumentBuilder)Commands.func_197056_a("index", IntegerArgumentType.integer(0)).requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();

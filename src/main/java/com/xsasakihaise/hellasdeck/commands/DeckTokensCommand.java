@@ -8,7 +8,13 @@ import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Displays the current token balance via {@code /hellas deck tokens}.
+ */
 public class DeckTokensCommand {
+    /**
+     * Adds the command literal.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(((LiteralArgumentBuilder)Commands.func_197057_a("tokens").requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();

@@ -9,7 +9,14 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Converts Deck-of-Many-Mons items into token balance via
+ * {@code /hellas deck input}.
+ */
 public class DeckInputCommand {
+    /**
+     * Adds the command to Brigadier.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(((LiteralArgumentBuilder)Commands.func_197057_a("input").requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();

@@ -6,7 +6,17 @@ import java.util.Map;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 
+/**
+ * Helper for materialising rewards by translating drawn card labels into
+ * {@code /pokegive} commands executed on the dedicated server.
+ */
 public class RewardHelper {
+    /**
+     * Iterates over drawn cards and grants each reward to the supplied player.
+     *
+     * @param player      recipient of the Pokémon
+     * @param drawnCards  formatted strings from {@link DeckOfManyMons#drawCard()}
+     */
     public static void giveCards(ServerPlayerEntity player, List<String> drawnCards) {
         MinecraftServer server = player.func_184102_h();
         if (server != null) {

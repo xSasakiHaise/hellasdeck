@@ -7,10 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
+/**
+ * Persists lightweight JSON logs that describe each Deck run.
+ */
 public class Logger {
     private static Gson gson = new Gson();
     private static final File root = new File("config/hellas/deck/logs");
 
+    /**
+     * Serialises the run log and token balance to {@code config/hellas/deck/logs}.
+     *
+     * <p>The files are timestamped so staff can audit rewards long after the
+     * session has finished.</p>
+     */
     public static void logRun(ServerPlayerEntity player, DeckOfManyMons deck) {
         try {
             root.mkdirs();

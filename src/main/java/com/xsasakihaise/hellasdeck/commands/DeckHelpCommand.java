@@ -6,7 +6,13 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.util.text.StringTextComponent;
 
+/**
+ * Provides an in-game primer for the Deck command suite.
+ */
 public class DeckHelpCommand {
+    /**
+     * Adds the help literal and prints a curated description of each command.
+     */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(((LiteralArgumentBuilder)Commands.func_197057_a("help").requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
             CommandSource source = (CommandSource)ctx.getSource();

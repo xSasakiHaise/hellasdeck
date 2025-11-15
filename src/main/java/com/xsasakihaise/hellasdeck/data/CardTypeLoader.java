@@ -7,7 +7,16 @@ import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * Utility loader for {@code card_types.json}, exposing card tags and counts to
+ * administrative tooling.
+ */
 public class CardTypeLoader {
+    /**
+     * Reads the bundled card type configuration.
+     *
+     * @return mapping of type id to metadata or an empty map if the file is missing
+     */
     public static Map<String, CardTypeData> load() {
         try (InputStream is = CardTypeLoader.class.getClassLoader().getResourceAsStream("data/card_types.json")) {
             if (is != null) {

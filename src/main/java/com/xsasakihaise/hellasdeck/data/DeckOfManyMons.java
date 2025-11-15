@@ -15,6 +15,14 @@ import java.util.Random;
 import java.util.Set;
 import net.minecraft.entity.player.ServerPlayerEntity;
 
+/**
+ * Runtime representation of an active Deck of Many Mons run.
+ *
+ * <p>The class keeps track of card pools, special draws, command payloads to be
+ * executed later, shiny rolls, and bookkeeping such as the death/protect state.
+ * Instances live for the duration of a player's session and are referenced via
+ * {@link DeckSessions}.</p>
+ */
 public class DeckOfManyMons {
     private final Map<String, Integer> cardTypeAmounts = new HashMap();
     private final Map<String, String> cardTypeTags = new HashMap();
@@ -32,6 +40,14 @@ public class DeckOfManyMons {
     private final List<Boolean> shinyFlags = new ArrayList();
     private final Gson gson = new Gson();
 
+    /**
+     * Builds a deck session for the supplied player, pre-loading the
+     * {@code card_types.json} metadata that defines the weighting and labels for
+     * each card category.
+     *
+     * @param player owner of the session
+     * @throws Exception when the card type resource is missing or cannot be parsed
+     */
     public DeckOfManyMons(ServerPlayerEntity player) throws Exception {
         this.player = player;
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/card_types.json");
@@ -54,12 +70,19 @@ public class DeckOfManyMons {
         }
     }
 
+    /**
+     * Performs a weighted draw from all card types and records the result.
+     *
+     * @return the formatted string that should be shown to the player
+     * @throws Exception when an underlying table cannot be read
+     */
     public String drawCard() throws Exception {
         if (this.ended) {
             return "The game has already ended.";
         } else {
             List<String> weighted = new ArrayList();
 
+            // Build a basic weighted list so each card type maintains its configured odds
             for(Map.Entry<String, Integer> e : this.cardTypeAmounts.entrySet()) {
                 for(int i = 0; i < (Integer)e.getValue(); ++i) {
                     weighted.add(e.getKey());
@@ -108,6 +131,10 @@ public class DeckOfManyMons {
         }
     }
 
+    /**
+     * Handles the "normal" card flow where a draw references a table entry in
+     * {@code data/tables/<type>.json}.
+     */
     private String handleNormal(String type) throws Exception {
         InputStream is = this.getClass().getClassLoader().getResourceAsStream("data/tables/" + type + ".json");
         if (is == null) {
@@ -130,6 +157,10 @@ public class DeckOfManyMons {
         }
     }
 
+    /**
+     * Resolves the "death" card effect by removing every card that is not
+     * protected or intrinsically safe (retry).
+     */
     private void handleDeath() {
         List<String> kept = new ArrayList();
         List<String> newCmd = new ArrayList();
@@ -140,6 +171,8 @@ public class DeckOfManyMons {
         for(int i = 0; i < this.drawnCards.size(); ++i) {
             String c = (String)this.drawnCards.get(i);
             if (this.protectedIndices.contains(i) || "retry".equals(c)) {
+                // This card survives the purge and therefore needs to maintain
+                // its command payload and shiny state alignment.
                 kept.add(c);
                 newCmd.add(this.commandData.get(i));
                 newShiny.add(this.shinyFlags.get(i));
@@ -161,6 +194,11 @@ public class DeckOfManyMons {
         this.protectedIndices.addAll(newProtected);
     }
 
+    /**
+     * Marks a card index as safe from the next death trigger.
+     *
+     * @param index zero-based index displayed to the player via /deck list
+     */
     public void protectCard(int index) {
         if (index >= 0 && index < this.drawnCards.size() && !this.protectedIndices.contains(index)) {
             this.protectedIndices.add(index);
@@ -169,6 +207,11 @@ public class DeckOfManyMons {
 
     }
 
+    /**
+     * Flags the deck as finished and records a summary into the persistent log
+     * entries. Rewards are not granted here; commands are executed by
+     * {@link com.xsasakihaise.hellasdeck.commands.DeckEndCommand}.
+     */
     public void endGame() {
         this.ended = true;
         this.endLog.add("Game ended. Player: " + this.player.getDisplayName().getString());
@@ -181,30 +224,52 @@ public class DeckOfManyMons {
 
     }
 
+    /**
+     * @return {@code true} if the death card has ever been drawn during this run
+     */
     public boolean isDeathTriggered() {
         return this.deathTriggered;
     }
 
+    /**
+     * @return copy of the cards drawn so far (including labels for special cards)
+     */
     public List<String> getDrawnCards() {
         return new ArrayList(this.drawnCards);
     }
 
+    /**
+     * @return indices currently immune to the death effect
+     */
     public Set<Integer> getProtectedIndices() {
         return new HashSet(this.protectedIndices);
     }
 
+    /**
+     * @return chronological narration of the session used for auditing
+     */
     public List<String> getRunLog() {
         return new ArrayList(this.runLog);
     }
 
+    /**
+     * @return final summary recorded when {@link #endGame()} is called
+     */
     public List<String> getEndLog() {
         return new ArrayList(this.endLog);
     }
 
+    /**
+     * Command payloads mirror {@link #drawnCards} indices and allow staff to
+     * grant rewards after the run concludes.
+     */
     public List<String> getCommandData() {
         return new ArrayList(this.commandData);
     }
 
+    /**
+     * @return list of shiny toggles aligned with the command data list
+     */
     public List<Boolean> getShinyFlags() {
         return new ArrayList(this.shinyFlags);
     }
