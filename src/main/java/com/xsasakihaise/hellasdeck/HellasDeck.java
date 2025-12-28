@@ -21,7 +21,11 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Main entry point for the Hellas Deck sidemod.
@@ -32,6 +36,11 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
  */
 @Mod("hellasdeck")
 public class HellasDeck {
+    private static final Logger LOGGER = LogManager.getLogger("HellasDeck");
+    private static final String ENTITLEMENT_KEY = "hellasdeck";
+    private static volatile boolean ENABLED = false;
+    private static volatile String DISABLE_REASON = "UNINITIALIZED";
+
     /**
      * Lazily populated metadata sourced from {@code config/hellasdeck.json}.
      * The data is currently informational only but helps staff confirm the
@@ -45,14 +54,42 @@ public class HellasDeck {
      * registered during server startup.
      */
     public HellasDeck() {
-        CoreCheck.verifyCoreLoaded();
-        if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
-            CoreCheck.verifyEntitled("hellasdeck");
-        }
-
         infoConfig = new HellasDeckInfoConfig();
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onCommonSetup);
         IEventBus bus = MinecraftForge.EVENT_BUS;
         bus.addListener(this::onRegisterCommands);
+    }
+
+    private void onCommonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(this::initGate);
+    }
+
+    private void initGate() {
+        if (FMLEnvironment.dist != Dist.DEDICATED_SERVER) {
+            ENABLED = true;
+            DISABLE_REASON = "OK (non-dedicated)";
+            return;
+        }
+
+        if (!ModList.get().isLoaded("hellascontrol")) {
+            ENABLED = false;
+            DISABLE_REASON = "HellasControl missing";
+            LOGGER.warn("[HellasDeck] disabled: {}", DISABLE_REASON);
+            return;
+        }
+
+        try {
+            CoreCheck.verifyCoreLoaded();
+            CoreCheck.verifyEntitled(ENTITLEMENT_KEY);
+
+            ENABLED = true;
+            DISABLE_REASON = "OK";
+            LOGGER.info("[HellasDeck] enabled (license OK) entitlement='{}'", ENTITLEMENT_KEY);
+        } catch (Exception e) {
+            ENABLED = false;
+            DISABLE_REASON = "License invalid";
+            LOGGER.warn("[HellasDeck] disabled: {} entitlement='{}'", DISABLE_REASON, ENTITLEMENT_KEY, e);
+        }
     }
 
     /**
@@ -61,6 +98,9 @@ public class HellasDeck {
      * @param event Forge registration hook supplying the dispatcher
      */
     private void onRegisterCommands(RegisterCommandsEvent event) {
+        if (!ENABLED) {
+            return;
+        }
         if (!ModList.get().isLoaded("hellascontrol")) {
             return;
         }
