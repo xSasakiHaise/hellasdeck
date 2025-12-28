@@ -3,6 +3,7 @@ package com.xsasakihaise.hellasdeck;
 import com.xsasakihaise.hellasdeck.data.TableLoader;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.MinecraftServer;
 
@@ -20,6 +21,7 @@ public class RewardHelper {
     public static void giveCards(ServerPlayerEntity player, List<String> drawnCards) {
         MinecraftServer server = player.getServer();
         if (server != null) {
+            CommandSource commandSource = player.getCommandSource().withPermission(2);
             for(String card : drawnCards) {
                 boolean shiny = card.contains("(Shiny)");
                 String type;
@@ -36,7 +38,7 @@ public class RewardHelper {
                 Map<String, String> table = TableLoader.getTable(type.toLowerCase());
                 String pokeData = (String)table.getOrDefault(name, name);
                 String cmd = "minecraft:pokegive @p " + pokeData + (shiny ? " shiny" : "");
-                server.getCommands().performCommand(server.getCommandSource(), cmd);
+                server.getCommands().performCommand(commandSource, cmd);
             }
 
         }
