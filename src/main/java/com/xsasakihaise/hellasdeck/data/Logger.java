@@ -23,12 +23,12 @@ public class Logger {
     public static void logRun(ServerPlayerEntity player, DeckOfManyMons deck) {
         try {
             root.mkdirs();
-            String name = player.func_200200_C_().getString() + "_" + player.func_110124_au().toString() + "_" + System.currentTimeMillis();
+            String name = player.getDisplayName().getString() + "_" + player.getUUID().toString() + "_" + System.currentTimeMillis();
             File file = new File(root, name + ".json");
             Map<String, Object> log = new HashMap();
             log.put("runLog", deck.getRunLog());
             log.put("endLog", deck.getEndLog());
-            log.put("tokens", TokenManager.get(player.func_110124_au().toString()));
+            log.put("tokens", TokenManager.get(player.getUUID().toString()));
             gson.toJson(log, new FileWriter(file));
         } catch (Exception e) {
             e.printStackTrace();

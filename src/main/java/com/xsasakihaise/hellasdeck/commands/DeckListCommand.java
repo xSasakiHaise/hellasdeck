@@ -19,11 +19,11 @@ public class DeckListCommand {
      * Installs the list literal.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("list").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("list").requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             DeckOfManyMons deck = DeckSessions.getSession(player);
             if (deck == null) {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("No active deck session."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("No active deck session."), false);
                 return 0;
             } else {
                 StringBuilder sb = new StringBuilder();
@@ -38,7 +38,7 @@ public class DeckListCommand {
                 if (DeckSessions.isBroadcast(player)) {
                     ((CommandSource)ctx.getSource()).getServer().getPlayerList().broadcastMessage(new StringTextComponent(sb.toString()), ChatType.SYSTEM, player.getUUID());
                 } else {
-                    ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent(sb.toString()), false);
+                    ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent(sb.toString()), false);
                 }
 
                 return 1;
