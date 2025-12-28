@@ -18,18 +18,18 @@ public class DeckInputCommand {
      * Adds the command to Brigadier.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("input").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("input").requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             ItemStack stack = player.getMainHandItem();
             if (!stack.isEmpty() && stack.getItem().getRegistryName().toString().equals("pixelmon:deck-of-many-mons")) {
                 int count = stack.getCount();
                 stack.setCount(0);
                 String uuid = player.getUUID().toString();
                 TokenManager.add(uuid, count);
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Added " + count + " tokens."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Added " + count + " tokens."), false);
                 return 1;
             } else {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("You must hold a Deck of Many Mons item in your hand."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("You must hold a Deck of Many Mons item in your hand."), false);
                 return 0;
             }
         }))));
