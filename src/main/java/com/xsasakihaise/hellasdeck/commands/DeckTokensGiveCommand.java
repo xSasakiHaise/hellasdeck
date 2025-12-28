@@ -19,17 +19,17 @@ public class DeckTokensGiveCommand {
      * Registers the give literal and arguments.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("tokens").then(Commands.literal("give").then(Commands.argument("player", StringArgumentType.string()).then(((RequiredArgumentBuilder)Commands.argument("amount", IntegerArgumentType.integer(1)).requires((src) -> src.hasPermissionLevel(2))).executes((ctx) -> {
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("tokens").then(Commands.literal("give").then(Commands.argument("player", StringArgumentType.string()).then(((RequiredArgumentBuilder)Commands.argument("amount", IntegerArgumentType.integer(1)).requires((src) -> src.hasPermission(2))).executes((ctx) -> {
             String name = StringArgumentType.getString(ctx, "player");
             int amount = IntegerArgumentType.getInteger(ctx, "amount");
             ServerPlayerEntity target = ((CommandSource)ctx.getSource()).getServer().getPlayerList().getPlayerByName(name);
             if (target == null) {
-                ((CommandSource)ctx.getSource()).sendErrorMessage(new StringTextComponent("Player not found."));
+                ((CommandSource)ctx.getSource()).sendFailure(new StringTextComponent("Player not found."));
                 return 0;
             } else {
                 String uuid = target.getUUID().toString();
                 TokenManager.add(uuid, amount);
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Gave " + amount + " tokens to " + name), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Gave " + amount + " tokens to " + name), false);
                 return 1;
             }
         })))))));
