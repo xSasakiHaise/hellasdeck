@@ -19,15 +19,15 @@ public class DeckEndCommand {
      * Hooks the command into Brigadier.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(((LiteralArgumentBuilder)Commands.func_197057_a("end").requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("end").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
             DeckOfManyMons deck = DeckSessions.getSession(player);
             if (deck == null) {
-                ((CommandSource)ctx.getSource()).func_197030_a(new StringTextComponent("No active deck session."), false);
+                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("No active deck session."), false);
                 return 0;
             } else {
                 deck.endGame();
-                ((CommandSource)ctx.getSource()).func_197030_a(new StringTextComponent("Deck session ended!"), false);
+                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Deck session ended!"), false);
                 List<String> commands = deck.getCommandData();
                 List<Boolean> shinies = deck.getShinyFlags();
                 Set<Integer> protectedIndices = deck.getProtectedIndices();
@@ -39,7 +39,7 @@ public class DeckEndCommand {
                         if (cmdData != null && !cmdData.isEmpty()) {
                             boolean shiny = (Boolean)shinies.get(i);
                             String fullCommand = "/minecraft:pokegive @p " + cmdData + (shiny ? " shiny" : "");
-                            ((CommandSource)ctx.getSource()).func_197028_i().func_195571_aL().func_197059_a(((CommandSource)ctx.getSource()).func_197033_a(2).func_197024_a(player), fullCommand);
+                            ((CommandSource)ctx.getSource()).getServer().getCommandManager().handleCommand(((CommandSource)ctx.getSource()).withPermissionLevel(2).withEntity(player), fullCommand);
                         }
                     }
                 }

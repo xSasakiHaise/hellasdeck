@@ -20,16 +20,16 @@ public class DeckProtectCommand {
      * Registers the literal and integer argument with Brigadier.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(Commands.func_197057_a("protect").then(((RequiredArgumentBuilder)Commands.func_197056_a("index", IntegerArgumentType.integer(0)).requires((src) -> src.func_197034_c(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).func_197035_h();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("protect").then(((RequiredArgumentBuilder)Commands.argument("index", IntegerArgumentType.integer(0)).requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
             int idx = IntegerArgumentType.getInteger(ctx, "index");
             DeckOfManyMons deck = DeckSessions.getSession(player);
             if (deck == null) {
-                ((CommandSource)ctx.getSource()).func_197030_a(new StringTextComponent("No active deck session."), false);
+                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("No active deck session."), false);
                 return 0;
             } else {
                 deck.protectCard(idx);
-                ((CommandSource)ctx.getSource()).func_197030_a(new StringTextComponent("Protected card at index " + idx), false);
+                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Protected card at index " + idx), false);
                 return 1;
             }
         })))));

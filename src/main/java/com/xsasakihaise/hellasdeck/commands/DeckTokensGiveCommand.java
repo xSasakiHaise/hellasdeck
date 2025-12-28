@@ -19,17 +19,17 @@ public class DeckTokensGiveCommand {
      * Registers the give literal and arguments.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.func_197057_a("hellas").then(Commands.func_197057_a("deck").then(Commands.func_197057_a("tokens").then(Commands.func_197057_a("give").then(Commands.func_197056_a("player", StringArgumentType.string()).then(((RequiredArgumentBuilder)Commands.func_197056_a("amount", IntegerArgumentType.integer(1)).requires((src) -> src.func_197034_c(2))).executes((ctx) -> {
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("tokens").then(Commands.literal("give").then(Commands.argument("player", StringArgumentType.string()).then(((RequiredArgumentBuilder)Commands.argument("amount", IntegerArgumentType.integer(1)).requires((src) -> src.hasPermissionLevel(2))).executes((ctx) -> {
             String name = StringArgumentType.getString(ctx, "player");
             int amount = IntegerArgumentType.getInteger(ctx, "amount");
-            ServerPlayerEntity target = ((CommandSource)ctx.getSource()).func_197028_i().func_184103_al().func_152612_a(name);
+            ServerPlayerEntity target = ((CommandSource)ctx.getSource()).getServer().getPlayerList().getPlayerByName(name);
             if (target == null) {
-                ((CommandSource)ctx.getSource()).func_197021_a(new StringTextComponent("Player not found."));
+                ((CommandSource)ctx.getSource()).sendErrorMessage(new StringTextComponent("Player not found."));
                 return 0;
             } else {
-                String uuid = target.func_110124_au().toString();
+                String uuid = target.getUUID().toString();
                 TokenManager.add(uuid, amount);
-                ((CommandSource)ctx.getSource()).func_197030_a(new StringTextComponent("Gave " + amount + " tokens to " + name), false);
+                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Gave " + amount + " tokens to " + name), false);
                 return 1;
             }
         })))))));
