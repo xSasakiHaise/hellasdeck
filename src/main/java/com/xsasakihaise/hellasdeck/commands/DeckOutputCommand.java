@@ -22,13 +22,13 @@ public class DeckOutputCommand {
      * Installs the output literal within the command tree.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("output").then(((RequiredArgumentBuilder)Commands.argument("amount", IntegerArgumentType.integer(1)).requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("output").then(((RequiredArgumentBuilder)Commands.argument("amount", IntegerArgumentType.integer(1)).requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             String uuid = player.getUUID().toString();
             int amount = IntegerArgumentType.getInteger(ctx, "amount");
             int tokens = TokenManager.get(uuid);
             if (tokens < amount) {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Not enough tokens."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Not enough tokens."), false);
                 return 0;
             } else {
                 TokenManager.remove(uuid, amount);
@@ -37,7 +37,7 @@ public class DeckOutputCommand {
                     player.drop(deckItem, false);
                 }
 
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Converted " + amount + " tokens into deck items."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Converted " + amount + " tokens into deck items."), false);
                 return 1;
             }
         })))));

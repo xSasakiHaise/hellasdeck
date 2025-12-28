@@ -18,11 +18,11 @@ public class DeckBroadcastCommand {
      * Registers {@code /hellas deck broadcast <bool>}.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("broadcast").then(((RequiredArgumentBuilder)Commands.argument("toggle", BoolArgumentType.bool()).requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(Commands.literal("broadcast").then(((RequiredArgumentBuilder)Commands.argument("toggle", BoolArgumentType.bool()).requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             boolean toggle = BoolArgumentType.getBool(ctx, "toggle");
             DeckSessions.setBroadcast(player, toggle);
-            ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Deck list broadcast set to: " + toggle), false);
+            ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Deck list broadcast set to: " + toggle), false);
             return 1;
         })))));
     }

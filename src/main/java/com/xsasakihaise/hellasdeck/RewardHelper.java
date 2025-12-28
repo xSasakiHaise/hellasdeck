@@ -18,7 +18,7 @@ public class RewardHelper {
      * @param drawnCards  formatted strings from {@link DeckOfManyMons#drawCard()}
      */
     public static void giveCards(ServerPlayerEntity player, List<String> drawnCards) {
-        MinecraftServer server = player.func_184102_h();
+        MinecraftServer server = player.getServer();
         if (server != null) {
             for(String card : drawnCards) {
                 boolean shiny = card.contains("(Shiny)");
@@ -36,7 +36,7 @@ public class RewardHelper {
                 Map<String, String> table = TableLoader.getTable(type.toLowerCase());
                 String pokeData = (String)table.getOrDefault(name, name);
                 String cmd = "minecraft:pokegive @p " + pokeData + (shiny ? " shiny" : "");
-                server.func_195571_aL().func_197059_a(server.func_195573_aM(), cmd);
+                server.getCommands().performCommand(server.getCommandSource(), cmd);
             }
 
         }

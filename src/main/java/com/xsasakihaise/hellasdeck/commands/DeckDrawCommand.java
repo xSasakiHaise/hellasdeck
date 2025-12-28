@@ -18,11 +18,11 @@ public class DeckDrawCommand {
      * Adds the draw literal to the {@code /hellas deck} tree.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("draw").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("draw").requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             DeckOfManyMons deck = DeckSessions.getSession(player);
             if (deck == null) {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("No active deck session."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("No active deck session."), false);
                 return 0;
             } else {
                 String result;
@@ -30,11 +30,11 @@ public class DeckDrawCommand {
                     result = deck.drawCard();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Error drawing card."), false);
+                    ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Error drawing card."), false);
                     return 0;
                 }
 
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent(result), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent(result), false);
                 if (DeckSessions.isBroadcast(player)) {
                     player.getServer().getPlayerList().broadcastMessage(new StringTextComponent(player.getDisplayName().getString() + " drew: " + result), ChatType.SYSTEM, player.getUUID());
                 }

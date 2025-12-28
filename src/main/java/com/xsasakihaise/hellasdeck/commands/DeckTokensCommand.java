@@ -16,11 +16,11 @@ public class DeckTokensCommand {
      * Adds the command literal.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("tokens").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("tokens").requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             String uuid = player.getUUID().toString();
             int amount = TokenManager.get(uuid);
-            ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("\ud83d\udcb0 Tokens: " + amount), false);
+            ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("\ud83d\udcb0 Tokens: " + amount), false);
             return 1;
         }))));
     }

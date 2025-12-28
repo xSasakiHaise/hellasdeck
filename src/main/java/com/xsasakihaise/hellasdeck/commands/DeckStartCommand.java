@@ -19,26 +19,26 @@ public class DeckStartCommand {
      * command tree.
      */
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("start").requires((src) -> src.hasPermissionLevel(0))).executes((ctx) -> {
-            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).asPlayer();
+        dispatcher.register((LiteralArgumentBuilder)Commands.literal("hellas").then(Commands.literal("deck").then(((LiteralArgumentBuilder)Commands.literal("start").requires((src) -> src.hasPermission(0))).executes((ctx) -> {
+            ServerPlayerEntity player = ((CommandSource)ctx.getSource()).getPlayerOrException();
             String uuid = player.getUUID().toString();
             int tokens = TokenManager.get(uuid);
             if (tokens <= 0) {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("You have 0 tokens! Cannot start."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("You have 0 tokens! Cannot start."), false);
                 return 0;
             } else if (DeckSessions.getSession(player) != null) {
-                ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("You already have a running session."), false);
+                ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("You already have a running session."), false);
                 return 0;
             } else {
                 try {
                     TokenManager.take(uuid, 1);
                     DeckOfManyMons deck = new DeckOfManyMons(player);
                     DeckSessions.startSession(player, deck);
-                    ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Deck session started! 1 token consumed."), false);
+                    ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Deck session started! 1 token consumed."), false);
                     return 1;
                 } catch (Exception e) {
                     e.printStackTrace();
-                    ((CommandSource)ctx.getSource()).sendFeedback(new StringTextComponent("Error starting deck session."), false);
+                    ((CommandSource)ctx.getSource()).sendSuccess(new StringTextComponent("Error starting deck session."), false);
                     return 0;
                 }
             }
