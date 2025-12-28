@@ -21,7 +21,7 @@ public class RewardHelper {
     public static void giveCards(ServerPlayerEntity player, List<String> drawnCards) {
         MinecraftServer server = player.getServer();
         if (server != null) {
-            CommandSource commandSource = server.getCommandSource().withPermission(2).withEntity(player);
+            CommandSource commandSource = server.createCommandSourceStack().withPermission(2).withEntity(player);
             for(String card : drawnCards) {
                 boolean shiny = card.contains("(Shiny)");
                 String type;
